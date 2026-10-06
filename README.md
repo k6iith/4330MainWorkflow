@@ -1,24 +1,29 @@
-# SwipeHire — Main Workflow Mockup
+# SwipeHire - main workflow mockup
 
-A LinkedIn-style professional network where job seekers upload their resume and employers swipe on candidates, Tinder-style.
+this is our mockup for the main workflow. basically the idea is linkedin but tinder. you upload your resume and then employers swipe on you lol
 
-**Open `index.html` in a browser** to view the interactive mockup (or enable GitHub Pages on this repo).
+to see it just open index.html in your browser. its interactive so you can actually drag the cards around
 
-## Main workflow
+## how it works
 
-1. **Upload & build profile (Job Seeker)** — Candidate uploads a PDF/DOCX resume. Headline, target role, location and skills are pulled from it and can be edited before publishing.
-2. **Swipe (Employer)** — Recruiter selects an open role and filters, then swipes through candidate cards:
-   - Right / ✓ = interested
-   - Left / ✕ = pass
-   - Up / ★ = shortlist for later
-   Each card shows a fit score, education, recent experience, skills and a link to the full resume.
-3. **Match & connect** — When an employer is interested in a candidate who has opted in to that role, it's a match. A chat opens and interview slots are suggested.
+**1. upload resume (job seeker side)**
+you upload your resume (pdf or docx) and it pulls out your skills, what job you want, location, etc. you can fix anything it got wrong before you publish your profile
 
-![Mockup](mockup.png)
+**2. swiping (employer side)**
+the recruiter picks which job they're hiring for and then swipes on people
+- swipe right / check = interested
+- swipe left / X = pass
+- star = save them for later
 
-## Files
+each card has a fit % score, school, most recent job, skills, and a link to the full resume
 
-- `index.html` — self-contained interactive mockup (no build step). Drag the candidate card or use the buttons.
-- `mockup.png` — static screenshot of all three screens (for submission).
+**3. match**
+if the employer swipes right and the candidate is interested in that job too its a match. then they can message each other and set up an interview
 
-_All candidate data in the mockup is fictional._
+![mockup](mockup.png)
+
+## files
+- index.html - the mockup (no setup needed, just open it)
+- mockup.png - screenshot of all 3 screens for the gradescope submission
+
+all the people in the mockup are made up btw
