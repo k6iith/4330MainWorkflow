@@ -22,8 +22,23 @@ if the employer swipes right and the candidate is interested in that job too its
 
 ![mockup](mockup.png)
 
+## flutter app
+
+theres also a flutter version of the same 3 screens (profile/upload, discover/swiping, matches). all the code is in lib/main.dart
+
+to run it:
+```
+flutter pub get
+flutter run
+```
+
+github actions builds the android apk every time someone pushes to main (check the actions tab, the apk is under artifacts)
+
 ## files
 - index.html - the mockup (no setup needed, just open it)
 - mockup.png - screenshot of all 3 screens for the gradescope submission
+- lib/main.dart - the flutter app
+- test/widget_test.dart - basic tests for swiping + matching
+- android, ios, web, windows, macos, linux - platform stuff flutter needs, dont really need to touch these
 
 all the people in the mockup are made up
