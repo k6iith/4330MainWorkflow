@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SwipeHire Main Workflow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f4f5f8; --ink:#14161c; --muted:#6b7080; --line:#e3e5ec;
+    --card:#ffffff; --brand:#3b5bdb; --brand-2:#7048e8;
+    --yes:#2f9e44; --no:#e03131; --star:#f59f00;
+    --phone:#0e0f13;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--ink);padding:40px 16px 64px}
+  header.page{max-width:1240px;margin:0 auto 32px}
+  header.page h1{font-size:30px;font-weight:800;letter-spacing:-.02em}
+  header.page h1 span{background:linear-gradient(90deg,var(--brand),var(--brand-2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  header.page p{color:var(--muted);margin-top:6px;max-width:720px;line-height:1.5}
+
+  .flow{max-width:1240px;margin:0 auto 28px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;font-size:13px;font-weight:600}
+  .flow .step{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:7px 14px;display:flex;gap:8px;align-items:center}
+  .flow .num{width:20px;height:20px;border-radius:50%;background:var(--brand);color:#fff;display:grid;place-items:center;font-size:11px}
+  .flow .arrow{color:var(--muted)}
+
+  .screens{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:28px;justify-items:center}
+  .screen-wrap{display:flex;flex-direction:column;align-items:center;gap:14px}
+  .label{text-align:center}
+  .label h2{font-size:15px;font-weight:700}
+  .label p{font-size:12.5px;color:var(--muted);margin-top:3px;max-width:290px;line-height:1.45}
+
+  .phone{width:300px;height:620px;background:var(--phone);border-radius:42px;padding:10px;box-shadow:0 20px 50px rgba(20,22,40,.18)}
+  .display{width:100%;height:100%;background:var(--card);border-radius:33px;overflow:hidden;display:flex;flex-direction:column;position:relative}
+  .status{height:34px;display:flex;justify-content:space-between;align-items:center;padding:0 22px;font-size:11.5px;font-weight:600}
+  .appbar{display:flex;justify-content:space-between;align-items:center;padding:6px 18px 10px;border-bottom:1px solid var(--line)}
+  .logo{font-weight:800;font-size:17px;letter-spacing:-.02em}
+  .logo b{color:var(--brand)}
+  .pill{font-size:10.5px;font-weight:700;padding:4px 9px;border-radius:999px;background:#edf2ff;color:var(--brand)}
+  .body{flex:1;padding:16px 18px;overflow:hidden;display:flex;flex-direction:column;gap:12px}
+  .tabbar{display:flex;justify-content:space-around;border-top:1px solid var(--line);padding:10px 0 16px;font-size:10px;color:var(--muted);font-weight:600}
+  .tabbar div{display:flex;flex-direction:column;align-items:center;gap:3px}
+  .tabbar .on{color:var(--brand)}
+  .ico{width:20px;height:20px;border-radius:6px;background:currentColor;opacity:.85}
+
+  /* Screen 1: upload */
+  .drop{border:2px dashed #bac8ff;background:#f5f7ff;border-radius:16px;padding:20px 12px;text-align:center}
+  .drop .doc{width:42px;height:52px;margin:0 auto 10px;background:#fff;border:2px solid var(--brand);border-radius:6px;position:relative}
+  .drop .doc:after{content:"PDF";position:absolute;bottom:6px;left:0;right:0;font-size:9px;font-weight:800;color:var(--brand)}
+  .drop h3{font-size:14px}
+  .drop p{font-size:11px;color:var(--muted);margin-top:4px}
+  .file{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:12px;padding:9px 11px;font-size:12px}
+  .file .fi{width:28px;height:34px;border-radius:5px;background:#ffe3e3;color:var(--no);font-size:8px;font-weight:800;display:grid;place-items:center}
+  .file .bar{height:4px;background:#e9ecef;border-radius:4px;margin-top:5px;overflow:hidden}
+  .file .bar i{display:block;height:100%;width:100%;background:var(--yes)}
+  .sec{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{font-size:11px;font-weight:600;background:#f1f3f5;border-radius:999px;padding:5px 10px}
+  .chip.new{background:#ebfbee;color:var(--yes)}
+  .field{border:1px solid var(--line);border-radius:10px;padding:8px 11px;font-size:12px}
+  .field small{display:block;color:var(--muted);font-size:10px;font-weight:600}
+  .btn{background:linear-gradient(90deg,var(--brand),var(--brand-2));color:#fff;border:0;border-radius:12px;padding:12px;font:700 13px Inter,sans-serif;cursor:pointer;margin-top:auto}
+
+  /* Screen 2: swipe */
+  .filters{display:flex;gap:6px;overflow:hidden}
+  .deck{position:relative;flex:1;min-height:0}
+  .cand{position:absolute;inset:0;background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:0 8px 24px rgba(20,22,40,.08);display:flex;flex-direction:column;overflow:hidden;cursor:grab;user-select:none;touch-action:none;transition:transform .3s ease, opacity .3s ease}
+  .cand.dragging{transition:none;cursor:grabbing}
+  .cand .top{padding:16px 16px 12px;color:#fff;position:relative}
+  .avatar{width:54px;height:54px;border-radius:50%;background:rgba(255,255,255,.25);border:2px solid rgba(255,255,255,.7);display:grid;place-items:center;font-weight:800;font-size:18px}
+  .cand .top h3{font-size:18px;margin-top:8px}
+  .cand .top p{font-size:12px;opacity:.9}
+  .score{position:absolute;top:16px;right:16px;background:#fff;color:var(--ink);border-radius:12px;padding:5px 9px;text-align:center;font-size:16px;font-weight:800;line-height:1.1}
+  .score small{display:block;font-size:8.5px;color:var(--muted);font-weight:700}
+  .cand .info{padding:12px 16px;display:flex;flex-direction:column;gap:9px;font-size:12px}
+  .row{display:flex;gap:8px;align-items:flex-start}
+  .row b{min-width:62px;color:var(--muted);font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;padding-top:1px}
+  .stamp{position:absolute;top:22px;font-weight:800;font-size:22px;border:3px solid;border-radius:8px;padding:2px 10px;opacity:0;transform:rotate(-14deg);background:rgba(255,255,255,.85)}
+  .stamp.like{left:18px;color:var(--yes)}
+  .stamp.nope{right:18px;color:var(--no);transform:rotate(14deg)}
+  .actions{display:flex;justify-content:center;gap:16px;padding-bottom:4px}
+  .act{width:52px;height:52px;border-radius:50%;border:1px solid var(--line);background:#fff;font-size:22px;font-weight:700;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.06)}
+  .act.no{color:var(--no)} .act.yes{color:var(--yes)} .act.star{color:var(--star);width:42px;height:42px;font-size:17px;align-self:center}
+  .empty{position:absolute;inset:0;display:grid;place-items:center;text-align:center;color:var(--muted);font-size:13px}
+  .hint{font-size:10.5px;color:var(--muted);text-align:center}
+
+  /* Screen 3: match */
+  .match{background:linear-gradient(160deg,var(--brand),var(--brand-2));color:#fff;align-items:center;text-align:center;justify-content:center}
+  .match h2{font-size:30px;font-weight:800;letter-spacing:-.02em}
+  .pair{display:flex;margin:6px 0}
+  .pair div{width:76px;height:76px;border-radius:50%;border:3px solid #fff;display:grid;place-items:center;font-weight:800;font-size:22px}
+  .pair div:first-child{background:#4c6ef5;margin-right:-14px}
+  .pair div:last-child{background:#12b886}
+  .match p{font-size:12.5px;opacity:.92;line-height:1.5;max-width:220px}
+  .match .ghost{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.4);color:#fff;border-radius:12px;padding:11px;width:100%;font:600 13px Inter,sans-serif}
+  .match .solid{background:#fff;color:var(--brand);border:0;border-radius:12px;padding:12px;width:100%;font:700 13px Inter,sans-serif}
+  .slots{display:flex;gap:6px;width:100%}
+  .slots span{flex:1;background:rgba(255,255,255,.18);border-radius:8px;padding:7px 0;font-size:11px;font-weight:600}
+
+  .log{max-width:1240px;margin:28px auto 0;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 18px;font-size:13px}
+  .log h3{font-size:13px;margin-bottom:6px}
+  .log ul{list-style:none;color:var(--muted);display:flex;flex-direction:column;gap:3px}
+  footer{max-width:1240px;margin:28px auto 0;color:var(--muted);font-size:12px}
+</style>
+</head>
+<body>
+
+<header class="page">
+  <h1><span>SwipeHire</span> — Main Workflow Mockup</h1>
+  <p>A professional network where job seekers upload a resume once, and employers swipe through candidates Tinder-style. A mutual "yes" (employer swipes right, candidate has opted in to the role) creates a match and opens a chat to schedule an interview.</p>
+</header>
+
+<div class="flow">
+  <div class="step"><span class="num">1</span>Candidate uploads resume</div><span class="arrow">→</span>
+  <div class="step"><span class="num">2</span>Profile auto-built &amp; published</div><span class="arrow">→</span>
+  <div class="step"><span class="num">3</span>Employer swipes candidates</div><span class="arrow">→</span>
+  <div class="step"><span class="num">4</span>Match → chat &amp; interview</div>
+</div>
+
+<div class="screens">
+
+  <!-- SCREEN 1 -->
+  <div class="screen-wrap">
+    <div class="phone"><div class="display">
+      <div class="status"><span>9:41</span><span>●●● 100%</span></div>
+      <div class="appbar"><div class="logo">Swipe<b>Hire</b></div><span class="pill">Job Seeker</span></div>
+      <div class="body">
+        <div class="drop">
+          <div class="doc"></div>
+          <h3>Upload your resume</h3>
+          <p>PDF or DOCX · we'll build your profile for you</p>
+        </div>
+        <div class="file">
+          <div class="fi">PDF</div>
+          <div style="flex:1">
+            <div style="font-weight:600">Jordan_Lee_Resume.pdf</div>
+            <div class="bar"><i></i></div>
+          </div>
+          <span style="color:var(--yes);font-weight:700">✓</span>
+        </div>
+        <div class="sec">Pulled from your resume</div>
+        <div class="field"><small>Headline</small>CS Senior · Full-stack developer</div>
+        <div class="field"><small>Looking for</small>Software Engineer Intern · Dallas / Remote</div>
+        <div class="chips">
+          <span class="chip">React</span><span class="chip">Python</span><span class="chip">SQL</span><span class="chip">AWS</span><span class="chip new">+ Add skill</span>
+        </div>
+        <button class="btn">Publish profile to employers</button>
+      </div>
+      <div class="tabbar"><div class="on"><span class="ico"></span>Profile</div><div><span class="ico"></span>Matches</div><div><span class="ico"></span>Chats</div></div>
+    </div></div>
+    <div class="label"><h2>1 · Upload &amp; build profile</h2><p>Candidate uploads a resume; skills, title and preferences are extracted and can be edited before publishing.</p></div>
+  </div>
+
+  <!-- SCREEN 2 -->
+  <div class="screen-wrap">
+    <div class="phone"><div class="display">
+      <div class="status"><span>9:41</span><span>●●● 100%</span></div>
+      <div class="appbar"><div class="logo">Swipe<b>Hire</b></div><span class="pill" style="background:#e6fcf5;color:#0ca678">Employer</span></div>
+      <div class="body">
+        <div class="filters">
+          <span class="chip" style="background:#edf2ff;color:var(--brand)">SWE Intern ▾</span>
+          <span class="chip">Dallas</span><span class="chip">React</span>
+        </div>
+        <div class="deck" id="deck">
+          <div class="empty">No more candidates for this role.<br>Check back tomorrow!</div>
+        </div>
+        <div class="actions">
+          <button class="act no" id="btnNo" title="Pass">✕</button>
+          <button class="act star" id="btnStar" title="Save for later">★</button>
+          <button class="act yes" id="btnYes" title="Interested">✓</button>
+        </div>
+        <div class="hint">Drag the card or use the buttons</div>
+      </div>
+      <div class="tabbar"><div class="on"><span class="ico"></span>Discover</div><div><span class="ico"></span>Matches</div><div><span class="ico"></span>Roles</div></div>
+    </div></div>
+    <div class="label"><h2>2 · Employer swipes</h2><p>Recruiter picks an open role and swipes: right = interested, left = pass, star = shortlist. Try it — it's interactive.</p></div>
+  </div>
+
+  <!-- SCREEN 3 -->
+  <div class="screen-wrap">
+    <div class="phone"><div class="display match" id="matchScreen">
+      <div class="body" style="align-items:center;justify-content:center;gap:16px;width:100%">
+        <div style="font-size:12px;font-weight:700;letter-spacing:.12em;opacity:.8">IT'S A</div>
+        <h2>Match!</h2>
+        <div class="pair"><div id="mInit">JL</div><div>AC</div></div>
+        <p><b id="mName">Jordan Lee</b> and <b>Acme Corp</b> are both interested in the <b>Software Engineer Intern</b> role.</p>
+        <div style="font-size:11px;font-weight:700;opacity:.8;align-self:flex-start">Suggested interview slots</div>
+        <div class="slots"><span>Thu 10am</span><span>Thu 2pm</span><span>Fri 11am</span></div>
+        <button class="solid">Send message</button>
+        <button class="ghost">Keep swiping</button>
+      </div>
+    </div></div>
+    <div class="label"><h2>3 · Match &amp; connect</h2><p>When both sides are interested, they match. Chat opens and interview slots are suggested from the recruiter's calendar.</p></div>
+  </div>
+
+</div>
+
+<div class="log">
+  <h3>Swipe log (demo)</h3>
+  <ul id="log"><li>Swipe a candidate to see decisions here.</li></ul>
+</div>
+
+<footer>CSCE 4330 · Group main-workflow mockup · Candidate data is fictional.</footer>
+
+<script>
+const candidates = [
+  {name:"Jordan Lee", init:"JL", role:"CS Senior · Full-stack developer", school:"UNT · B.S. Computer Science · May 2027", exp:"Web Dev Intern, Mavrix (Summer 2026)", skills:["React","Python","SQL","AWS"], score:92, color:"#4c6ef5"},
+  {name:"Priya Shah", init:"PS", role:"Data Science Junior", school:"UTD · B.S. Data Science · 2028", exp:"Research Asst., ML Lab", skills:["Python","Pandas","TensorFlow"], score:85, color:"#7048e8"},
+  {name:"Marcus Reed", init:"MR", role:"Software Engineering Senior", school:"UNT · B.S. Software Eng. · Dec 2026", exp:"IT Support, Campus Tech Desk", skills:["Java","Spring","Docker"], score:78, color:"#e8590c"},
+  {name:"Elena Torres", init:"ET", role:"CS Senior · Mobile developer", school:"SMU · B.S. Computer Science · 2027", exp:"iOS Intern, Lumen Apps", skills:["Swift","Kotlin","Firebase"], score:81, color:"#0ca678"}
+];
+const deck = document.getElementById('deck');
+const logEl = document.getElementById('log');
+let firstLog = true;
+
+function cardHTML(c){
+  return `<div class="top" style="background:linear-gradient(140deg, ${c.color}, ${c.color}cc)">
+      <div class="avatar">${c.init}</div>
+      <h3>${c.name}</h3><p>${c.role}</p>
+      <div class="score">${c.score}%<small>FIT</small></div>
+    </div>
+    <span class="stamp like">YES</span><span class="stamp nope">PASS</span>
+    <div class="info">
+      <div class="row"><b>Education</b><span>${c.school}</span></div>
+      <div class="row"><b>Recent</b><span>${c.exp}</span></div>
+      <div class="row"><b>Skills</b><span class="chips">${c.skills.map(s=>`<span class="chip">${s}</span>`).join('')}</span></div>
+      <div class="row"><b>Resume</b><span style="color:var(--brand);font-weight:600">View full resume →</span></div>
+    </div>`;
+}
+
+function build(){
+  [...candidates].reverse().forEach((c,i)=>{
+    const el = document.createElement('div');
+    el.className='cand'; el.innerHTML = cardHTML(c); el.dataset.idx = candidates.length-1-i;
+    deck.appendChild(el); attachDrag(el);
+  });
+}
+function topCard(){ const cards = deck.querySelectorAll('.cand'); return cards[cards.length-1]; }
+
+function log(msg){
+  if(firstLog){ logEl.innerHTML=''; firstLog=false; }
+  const li=document.createElement('li'); li.textContent=msg; logEl.prepend(li);
+}
+
+function decide(el, dir){
+  if(!el) return;
+  const c = candidates[el.dataset.idx];
+  const x = dir==='yes'?400:dir==='no'?-400:0, y = dir==='star'?-500:0;
+  el.style.transform=`translate(${x}px,${y}px) rotate(${x/20}deg)`; el.style.opacity=0;
+  setTimeout(()=>el.remove(),300);
+  if(dir==='yes'){
+    log(`✓ Interested in ${c.name} — match created`);
+    document.getElementById('mName').textContent=c.name;
+    const mi=document.getElementById('mInit'); mi.textContent=c.init; mi.style.background=c.color;
+    const ms=document.getElementById('matchScreen');
+    ms.animate([{transform:'scale(.96)'},{transform:'scale(1)'}],{duration:300});
+  } else if(dir==='no') log(`✕ Passed on ${c.name}`);
+  else log(`★ Shortlisted ${c.name}`);
+}
+
+function attachDrag(el){
+  let sx=0, sy=0, dx=0, dy=0, down=false;
+  el.addEventListener('pointerdown',e=>{ if(el!==topCard())return; down=true; sx=e.clientX; sy=e.clientY; el.classList.add('dragging'); el.setPointerCapture(e.pointerId); });
+  el.addEventListener('pointermove',e=>{
+    if(!down)return; dx=e.clientX-sx; dy=e.clientY-sy;
+    el.style.transform=`translate(${dx}px,${dy}px) rotate(${dx/18}deg)`;
+    el.querySelector('.like').style.opacity=Math.max(0,dx/90);
+    el.querySelector('.nope').style.opacity=Math.max(0,-dx/90);
+  });
+  el.addEventListener('pointerup',()=>{
+    if(!down)return; down=false; el.classList.remove('dragging');
+    if(dx>90) decide(el,'yes'); else if(dx<-90) decide(el,'no'); else if(dy<-120) decide(el,'star');
+    else { el.style.transform=''; el.querySelectorAll('.stamp').forEach(s=>s.style.opacity=0); }
+    dx=dy=0;
+  });
+}
+
+document.getElementById('btnYes').onclick=()=>decide(topCard(),'yes');
+document.getElementById('btnNo').onclick=()=>decide(topCard(),'no');
+document.getElementById('btnStar').onclick=()=>decide(topCard(),'star');
+build();
+</script>
+</body>
+</html>
