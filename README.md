@@ -26,4 +26,4 @@ if the employer swipes right and the candidate is interested in that job too its
 - index.html - the mockup (no setup needed, just open it)
 - mockup.png - screenshot of all 3 screens for the gradescope submission
 
-all the people in the mockup are made up btw
+all the people in the mockup are made up
